@@ -1,0 +1,6 @@
+namespace: default
+
+bases:
+- ./clustersetbinding.yaml
+- ./placement.yaml
+- ./manifestworkreplicaset.yaml

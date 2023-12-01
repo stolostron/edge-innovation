@@ -1,0 +1,15 @@
+namespace: kepler
+
+commonLabels:
+  sustainable-computing.io/app: kepler
+  
+# TODO using clusterrole.yaml instead of cluster-admin
+bases:
+- ./clusterrolebinding.yaml
+- ./namespace.yaml
+- ./role.yaml
+- ./rolebinding.yaml
+- ./serviceaccount.yaml
+- ./service.yaml
+- ./daemonsets.yaml
+- ./servicemonitor.yaml

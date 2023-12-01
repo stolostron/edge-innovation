@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app.kubernetes.io/version: release-0.5.3
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: kepler
+    sustainable-computing.io/app: kepler
+  name: kepler
+  namespace: kepler
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: kepler
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/name: kepler
+        sustainable-computing.io/app: kepler
+    spec:
+      containers:
+      - args:
+        - -v=$(KEPLER_LOG_LEVEL)
+        env:
+        - name: NODE_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.hostIP
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        - name: BIND_ADDRESS
+          value: 0.0.0.0:9102
+        - name: CGROUP_METRICS
+          value: '*'
+        - name: CPU_ARCH_OVERRIDE
+        - name: ENABLE_EBPF_CGROUPID
+          value: "true"
+        - name: ENABLE_GPU
+          value: "true"
+        - name: ENABLE_PROCESS_METRICS
+          value: "true"
+        - name: EXPOSE_IRQ_COUNTER_METRICS
+          value: "true"
+        - name: EXPOSE_KUBELET_METRICS
+          value: "true"
+        - name: KEPLER_LOG_LEVEL
+          value: "1"
+        image: quay.io/sustainable_computing_io/kepler:release-0.5.3
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /healthz
+            port: 9102
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 60
+          successThreshold: 1
+          timeoutSeconds: 10
+        name: kepler-exporter
+        ports:
+        - containerPort: 9102
+          hostPort: 9102
+          name: http
+          protocol: TCP
+        resources: {}
+        securityContext:
+          privileged: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /lib/modules
+          name: lib-modules
+        - mountPath: /sys
+          name: tracing
+        - mountPath: /proc
+          name: proc
+        - mountPath: /usr/src
+          name: usr-src
+      dnsPolicy: ClusterFirst
+      hostNetwork: true
+      nodeSelector:
+        kubernetes.io/os: linux
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: kepler
+      serviceAccountName: kepler
+      terminationGracePeriodSeconds: 30
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+      volumes:
+      - hostPath:
+          path: /lib/modules
+          type: DirectoryOrCreate
+        name: lib-modules
+      - hostPath:
+          path: /sys
+          type: Directory
+        name: tracing
+      - hostPath:
+          path: /proc
+          type: Directory
+        name: proc
+      - hostPath:
+          path: /usr/src
+          type: Directory
+        name: usr-src
+  updateStrategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate

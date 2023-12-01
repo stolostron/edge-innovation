@@ -1,0 +1,47 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: observability-metrics-custom-allowlist
+  namespace: open-cluster-management-observability
+data:
+  metrics_list.yaml: |
+    names:
+    - kepler_container_bpf_block_irq_total
+    - kepler_container_bpf_cpu_time_us_total
+    - kepler_container_bpf_net_rx_irq_total
+    - kepler_container_bpf_net_tx_irq_total
+    - kepler_container_cgroupfs_cpu_usage_us_total
+    - kepler_container_cgroupfs_memory_usage_bytes_total
+    - kepler_container_cgroupfs_system_cpu_usage_us_total
+    - kepler_container_cgroupfs_user_cpu_usage_us_total
+    - kepler_container_core_joules_total
+    - kepler_container_dram_joules_total
+    - kepler_container_joules_total
+    - kepler_container_kubelet_cpu_usage_total
+    - kepler_container_kubelet_memory_bytes_total
+    - kepler_container_other_host_components_joules_total
+    - kepler_container_package_joules_total
+    - kepler_container_uncore_joules_total
+    - kepler_exporter_build_info
+    - kepler_node_core_joules_total
+    - kepler_node_cpu_scaling_frequency_hertz
+    - kepler_node_dram_joules_total
+    - kepler_node_energy_stat
+    - kepler_node_info
+    - kepler_node_other_host_components_joules_total
+    - kepler_node_package_energy_millijoule
+    - kepler_node_package_joules_total
+    - kepler_node_platform_joules_total
+    - kepler_node_uncore_joules_total
+    - kepler_pod_energy_stat
+    - kepler_process_bpf_block_irq_total
+    - kepler_process_bpf_net_rx_irq_total
+    - kepler_process_bpf_net_tx_irq_total
+    - kepler_process_core_joules_total
+    - kepler_process_cpu_cpu_time_us
+    - kepler_process_dram_joules_total
+    - kepler_process_gpu_joules_total
+    - kepler_process_joules_total
+    - kepler_process_other_host_components_joules_total
+    - kepler_process_package_joules_total
+    - kepler_process_uncore_joules_total
