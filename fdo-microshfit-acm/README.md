@@ -104,7 +104,6 @@ spec:
     registryPoll:
       interval: 10m
 ---
-cat << EOF | oc apply -f -
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
@@ -158,6 +157,7 @@ metadata:
   name: manufacturing-server
   namespace: fdo
 spec:
+  logLevel: TRACE
   protocols:
     plainDI: false
     diun:
