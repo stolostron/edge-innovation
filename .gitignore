@@ -21,3 +21,6 @@
 go.work
 
 images
+
+_output
+join.sh
