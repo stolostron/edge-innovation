@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: dgw-settings
+  namespace: takebishi
+data:
+  setting.dxg: |
+    {"CommInterface":{"Mqtt":[{"name":"amq-mqtt","setting":[{"name":"serverAddress","value":"mqtt.amq-broker.svc"},{"name":"clientId","value":"takebishi-dgw"}]}]},"System":{"Config":{"setting":[{"name":"autoStart","value":"true"},{"name":"language","value":"1"}]},"TimeConfig":{"setting":[{"name":"timeZone","value":"Etc/UTC"},{"name":"useNtpSyncronous","value":"false"},{"name":"useSleMode","value":"true"},{"name":"useUpdateHardwareClock","value":"true"},{"name":"updateHWClockExecTime","value":"1"}]},"User":{"users":[{"name":"administrator","setting":[{"name":"useWebUI","value":"true"},{"name":"password","value":"admin"}]}]},"firewall":[{"name":"CONST_FIREWALL","setting":[{"name":"validFlag","value":"true"},{"name":"type","value":"WEB User Interface"},{"name":"inputport","value":"0"},{"name":"sourceAddress","value":"0.0.0.0"},{"name":"sourceAddressMask","value":"0"}]},{"name":"DEFAULT_FIREWALL","setting":[{"name":"validFlag","value":"true"},{"name":"type","value":"All Service"},{"name":"inputport","value":"99"},{"name":"sourceAddress","value":"0.0.0.0"},{"name":"sourceAddressMask","value":"0"}]}]}}

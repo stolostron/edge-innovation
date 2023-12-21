@@ -1,0 +1,9 @@
+apiVersion: addon.open-cluster-management.io/v1alpha1
+kind: AddOnDeploymentConfig
+metadata:
+  name: takebishi-dgw-demo-config
+  namespace: takebishi-dgw-demo
+spec:
+  customizedVariables:
+    - name: STORAGE_CLASS_NAME
+      value: manual

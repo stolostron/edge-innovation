@@ -1,0 +1,33 @@
+apiVersion: addon.open-cluster-management.io/v1alpha1
+kind: ClusterManagementAddOn
+metadata:
+  name: takebishi-device-gateway
+  annotations:
+    addon.open-cluster-management.io/lifecycle: "addon-manager"
+spec:
+  addOnMeta:
+    description: Takebishi Device Gateway
+    displayName: takebishi-device-gateway
+  supportedConfigs:
+    - group: addon.open-cluster-management.io
+      resource: addondeploymentconfigs
+      defaultConfig:
+        name: takebishi-dgw-demo-config
+        namespace: takebishi-dgw-demo
+    - group: addon.open-cluster-management.io
+      resource: addontemplates
+      defaultConfig:
+        name: takebishi-device-gateway-3.3.0
+  installStrategy:
+    type: Placements
+    placements:
+      - name: edge-clusters
+        namespace: takebishi-dgw-demo
+        # configs:
+        #   - group: addon.open-cluster-management.io
+        #     resource: addontemplates
+        #     name: amq-broker-3.4.0
+        # rolloutStrategy:
+        #   type: All
+        #   all:
+        #     timeout: 30m

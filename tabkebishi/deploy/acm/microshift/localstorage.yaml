@@ -1,0 +1,59 @@
+apiVersion: work.open-cluster-management.io/v1
+kind: ManifestWork
+metadata:
+  name: local-storage
+spec:
+  workload:
+    manifests:
+      - apiVersion: rbac.authorization.k8s.io/v1
+        kind: ClusterRole
+        metadata:
+          name: open-cluster-management:klusterlet-work:pv
+          labels:
+            open-cluster-management.io/aggregate-to-work: "true"
+        rules:
+          - apiGroups: [""]
+            resources: ["persistentvolumes"]
+            verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+      - apiVersion: v1
+        kind: PersistentVolume
+        metadata:
+          name: takebishi-demo-pv-1
+        spec:
+          storageClassName: manual
+          volumeMode: Filesystem
+          capacity:
+            storage: 1Gi 
+          accessModes:
+            - ReadWriteOnce 
+          hostPath:
+            path: "/mnt/takebishi-demo/data/pv1"
+          persistentVolumeReclaimPolicy: Recycle
+      - apiVersion: v1
+        kind: PersistentVolume
+        metadata:
+          name: takebishi-demo-pv-2
+        spec:
+          storageClassName: manual
+          volumeMode: Filesystem
+          capacity:
+            storage: 1Gi 
+          accessModes:
+            - ReadWriteOnce 
+          hostPath:
+            path: "/mnt/takebishi-demo/data/pv2"
+          persistentVolumeReclaimPolicy: Recycle
+      - apiVersion: v1
+        kind: PersistentVolume
+        metadata:
+          name: takebishi-demo-pv-3
+        spec:
+          storageClassName: manual
+          volumeMode: Filesystem
+          capacity:
+            storage: 1Gi 
+          accessModes:
+            - ReadWriteOnce 
+          hostPath:
+            path: "/mnt/takebishi-demo/data/pv3"
+          persistentVolumeReclaimPolicy: Recycle

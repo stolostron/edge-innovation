@@ -1,0 +1,13 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: dgw
+  namespace: takebishi
+spec:
+  to:
+    kind: Service
+    name: dgw
+    weight: 100
+  port:
+    targetPort: http
+  wildcardPolicy: None

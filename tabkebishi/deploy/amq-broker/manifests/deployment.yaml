@@ -1,0 +1,48 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: amq-broker
+  namespace: amq-broker
+  labels:
+    app: amq-broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: amq-broker
+  template:
+    metadata:
+      labels:
+        app: amq-broker
+    spec:
+      containers:
+        - name: amq-broker
+          image: registry.redhat.io/amq7/amq-broker:7.8
+          imagePullPolicy: IfNotPresent
+          persistenceEnabled: true
+          storage:
+            size: 1Gi
+          securityContext:
+            privileged: true
+          env:
+            - name: AMQ_USER
+              value: admin
+            - name: AMQ_PASSWORD
+              value: admin
+            - name: AMQ_PROTOCOL
+              value: mqtt
+            - name: AMQ_DATA_DIR
+              value: /data
+          ports:
+            - containerPort: 61616 # general
+            - containerPort: 8161  # web
+            - containerPort: 1883  # mqtt
+          volumeMounts:
+            - name: amq-broker
+              mountPath: /data
+      volumes:
+        - name: amq-broker
+          persistentVolumeClaim:
+            claimName: amq-broker
+      serviceAccount: amq-broker
+      serviceAccountName: amq-broker

@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: mqtt
+  namespace: amq-broker
+spec:
+  ports:
+  - port: 1883
+    protocol: TCP
+    targetPort: 1883
+  selector:
+    app:  amq-broker
+  type: ClusterIP

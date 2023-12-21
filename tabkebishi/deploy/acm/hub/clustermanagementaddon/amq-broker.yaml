@@ -1,0 +1,33 @@
+apiVersion: addon.open-cluster-management.io/v1alpha1
+kind: ClusterManagementAddOn
+metadata:
+  name: amq-broker
+  annotations:
+    addon.open-cluster-management.io/lifecycle: "addon-manager"
+spec:
+  addOnMeta:
+    description: AMQ broker
+    displayName: amq-broker
+  supportedConfigs:
+    - group: addon.open-cluster-management.io
+      resource: addondeploymentconfigs
+      defaultConfig:
+        name: takebishi-dgw-demo-config
+        namespace: takebishi-dgw-demo
+    - group: addon.open-cluster-management.io
+      resource: addontemplates
+      defaultConfig:
+        name: amq-broker-7.8.0
+  installStrategy:
+    type: Placements
+    placements:
+      - name: edge-clusters
+        namespace: takebishi-dgw-demo
+        # configs:
+        #   - group: addon.open-cluster-management.io
+        #     resource: addontemplates
+        #     name: amq-broker-7.9.0
+        # rolloutStrategy:
+        #   type: All
+        #   all:
+        #     timeout: 30m

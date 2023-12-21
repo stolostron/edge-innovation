@@ -1,0 +1,49 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: takebishi-dgw
+  namespace: takebishi
+spec:
+  selector:
+    matchLabels:
+      app: takebishi-dgw
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: takebishi-dgw
+    spec:
+      containers:
+        - name: takebishi-dgw
+          image: quay.io/yono/dgw:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+            - containerPort: 443
+              protocol: TCP
+          volumeMounts:
+          - mountPath: /etc/dxpgateway
+            name: pvc-takebishi-gateway
+          - mountPath: /mnt/sdcard
+            name: pvc-takebishi-sdcard
+          - mountPath: /etc/dxpgateway/config/setting.dxg
+            name: dgw-setting
+            subPath: setting.dxg
+          securityContext:
+            privileged: true
+      volumes:
+        - name: pvc-takebishi-gateway
+          persistentVolumeClaim:
+            claimName: takebishi-gateway
+        - name: pvc-takebishi-sdcard
+          persistentVolumeClaim:
+            claimName: takebishi-sdcard
+        - name: dgw-setting
+          configMap:
+            name: dgw-settings
+            items:
+              - key: setting.dxg
+                path: setting.dxg
+      serviceAccount: takebishi
+      serviceAccountName: takebishi

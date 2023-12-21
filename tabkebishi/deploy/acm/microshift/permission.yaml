@@ -1,0 +1,17 @@
+apiVersion: work.open-cluster-management.io/v1
+kind: ManifestWork
+metadata:
+  name: route-permission-set
+spec:
+  workload:
+    manifests:
+      - apiVersion: rbac.authorization.k8s.io/v1
+        kind: ClusterRole
+        metadata:
+          name: open-cluster-management:klusterlet-work:route
+          labels:
+            open-cluster-management.io/aggregate-to-work: "true"
+        rules:
+          - apiGroups: ["route.openshift.io"]
+            resources: ["routes"]
+            verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]

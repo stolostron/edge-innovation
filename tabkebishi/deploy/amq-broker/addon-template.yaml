@@ -1,0 +1,116 @@
+apiVersion: addon.open-cluster-management.io/v1alpha1
+kind: AddOnTemplate
+metadata:
+  name: amq-broker-7.8.0
+spec:
+  addonName: amq-broker
+  agentSpec:
+    manifestConfigs:
+      - resourceIdentifier:
+          resource: persistentvolumeclaims
+          name: amq-broker
+          namespace: amq-broker
+        updateStrategy:
+          type: ServerSideApply
+    workload:
+      manifests:
+      - kind: Namespace
+        apiVersion: v1
+        metadata:
+          labels:
+            pod-security.kubernetes.io/audit: privileged
+            pod-security.kubernetes.io/enforce: privileged
+            pod-security.kubernetes.io/warn: privileged
+            security.openshift.io/scc.podSecurityLabelSync: "false"
+          name: amq-broker
+      - kind: PersistentVolumeClaim
+        apiVersion: v1
+        metadata:
+          name: amq-broker
+          namespace: amq-broker
+        spec:
+          storageClassName: "{{STORAGE_CLASS_NAME}}"
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+      - kind: Service
+        apiVersion: v1
+        metadata:
+          name: mqtt
+          namespace: amq-broker
+        spec:
+          ports:
+          - port: 1883
+            protocol: TCP
+            targetPort: 1883
+          selector:
+            app:  amq-broker
+          type: ClusterIP
+      - kind: ServiceAccount
+        apiVersion: v1
+        metadata:
+          name: amq-broker
+          namespace: amq-broker
+      - kind: RoleBinding
+        apiVersion: rbac.authorization.k8s.io/v1
+        metadata:
+          name: system:openshift:scc:privileged
+          namespace: amq-broker
+        roleRef:
+          apiGroup: rbac.authorization.k8s.io
+          kind: ClusterRole
+          name: system:openshift:scc:privileged
+        subjects:
+        - kind: ServiceAccount
+          name: amq-broker
+          namespace: amq-broker
+      - kind: Deployment
+        apiVersion: apps/v1
+        metadata:
+          name: amq-broker
+          namespace: amq-broker
+          labels:
+            app: amq-broker
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              app: amq-broker
+          template:
+            metadata:
+              labels:
+                app: amq-broker
+            spec:
+              containers:
+                - name: amq-broker
+                  image: registry.redhat.io/amq7/amq-broker:7.8
+                  imagePullPolicy: IfNotPresent
+                  persistenceEnabled: true
+                  storage:
+                    size: 1Gi
+                  securityContext:
+                    privileged: true
+                  env:
+                    - name: AMQ_USER
+                      value: admin
+                    - name: AMQ_PASSWORD
+                      value: admin
+                    - name: AMQ_PROTOCOL
+                      value: mqtt
+                    - name: AMQ_DATA_DIR
+                      value: /data
+                  ports:
+                    - containerPort: 61616 # general
+                    - containerPort: 8161  # web
+                    - containerPort: 1883  # mqtt
+                  volumeMounts:
+                    - name: amq-broker
+                      mountPath: /data
+              volumes:
+                - name: amq-broker
+                  persistentVolumeClaim:
+                    claimName: amq-broker
+              serviceAccount: amq-broker
+              serviceAccountName: amq-broker

@@ -1,0 +1,10 @@
+namespace: takebishi-dgw-demo
+
+bases:
+- ./clusterset.yaml
+- ./namespace.yaml
+- ./clustersetbinding.yaml
+- ./placement.yaml
+- ./addondeploymentconfig.yaml
+- ./clustermanagementaddon/amq-broker.yaml
+- ./clustermanagementaddon/takebishi-device-gateway.yaml
