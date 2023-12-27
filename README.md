@@ -1,3 +1,6 @@
-# edge-innovation
+# Edge Innovation
 
-This repo contains the demo script for [edge innovation](https://docs.google.com/presentation/d/1tf1GrZMRpNUBKIHF7KiOWMJtXPQvM3cDCaCKolA2mss/edit#slide=id.g2953caca38d_0_2456)
+This repo contains the document and scripts for the Edge Innovation around ACM.
+
+- [MicroShift Lifecycle Management with ACM using FDO](./fdo-microshfit-acm/)
+- [Monitoring MicroShift Power Consumption with Kepler in ACM](./kepler-acm/)
