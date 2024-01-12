@@ -26,7 +26,7 @@ spec:
         # configs:
         #   - group: addon.open-cluster-management.io
         #     resource: addontemplates
-        #     name: amq-broker-3.4.0
+        #     name: takebishi-device-gateway-3.4.0
         # rolloutStrategy:
         #   type: All
         #   all:

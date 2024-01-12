@@ -4,6 +4,7 @@ metadata:
   name: dgw
   namespace: takebishi
 spec:
+  host: dgw-takebishi.apps.example.com
   to:
     kind: Service
     name: dgw

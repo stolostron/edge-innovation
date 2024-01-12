@@ -10,3 +10,5 @@ spec:
   resources:
     requests:
       storage: 1Gi
+  volumeMode: Filesystem
+  volumeName: takebishi-demo-pv-3
