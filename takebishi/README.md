@@ -20,12 +20,35 @@ The ACM `ManagedClusterAddOn` can help user
     - A `ManagedClusterSetBinding` in the `takebishi-dgw-demo` namespace, it binds the `edge-clusters` cluster set
     - A `Placement` in the `takebishi-dgw-demo` namespace, it selects the MicroShift clusters from the `edge-clusters` cluster set
     - A `AddOnDeploymentConfig` in the `takebishi-dgw-demo` namespace, it holds the configuration of the Takebishi device gateway and AMQ broker
-2. Import your MicroShift cluster to the ACM hub cluster and add it to the `edge-clusters` cluster set
-3. Run `oc -n <your-microshift-cluster-name> apply -f deploy/acm/microshift/permission.yaml` to escalate the work agent permission in your
+2. Prepare a MicroShift cluster
+    ```sh
+    # refer to https://github.com/openshift/microshift/blob/main/docs/user/getting_started.md
+
+    sudo subscription-manager register --auto-attach
+
+    sudo subscription-manager repos \
+        --enable rhocp-4.13-for-rhel-9-$(uname -m)-rpms \
+        --enable fast-datapath-for-rhel-9-$(uname -m)-rpms
+
+    sudo dnf install -y microshift openshift-clients
+
+    sudo firewall-cmd --permanent --zone=trusted --add-source=10.42.0.0/16
+    sudo firewall-cmd --permanent --zone=trusted --add-source=169.254.169.1
+    sudo firewall-cmd --reload
+
+    sudo cp .pull-secret.json /etc/crio/openshift-pull-secret
+
+    sudo systemctl enable --now microshift.service
+
+    mkdir ~/.kube
+    sudo cat /var/lib/microshift/resources/kubeadmin/kubeconfig > ~/.kube/config
+
+    oc get cs
+    ```
+3. Import your MicroShift cluster to the ACM hub cluster and add it to the `edge-clusters` cluster set
+4. Run `oc -n <your-microshift-cluster-name> apply -f deploy/acm/microshift/permission.yaml` to escalate the work agent permission in your
 MicroShift cluster to allow the work agent operating the `route.openshift.io`
-
-    **Note**: if your MicroShift cluster did not enable the LVM CSI plugin, run `oc -n <your-microshift-cluster-name> apply -f deploy/acm/microshift/localstorage.yaml` to prepare the local pv in your MicroShift cluster.
-
+5. If your MicroShift cluster did not enable the LVM CSI plugin, run `oc -n <your-microshift-cluster-name> apply -f deploy/acm/microshift/localstorage.yaml` to prepare the local pv in your MicroShift cluster.
 
 ## Deploy
 
